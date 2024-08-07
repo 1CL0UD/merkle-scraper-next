@@ -1,7 +1,9 @@
 'use client';
+import GoogleSearchResult from '@/components/GoogleSearchResult';
 import CSVDataDisplay from '@/components/papaparse/csv-data-display';
 import CSVUploader from '@/components/papaparse/csv-uploader';
 import { useDDGS } from '@/hooks/useDDGS';
+import { usePuppeteer } from '@/hooks/usePuppeteer';
 import { SearchResults } from 'duck-duck-scrape';
 import { useState } from 'react';
 
@@ -17,37 +19,39 @@ export default function Home() {
     error,
     handleDataUploaded,
     scrapeCompanies,
-  } = useDDGS();
+  } = usePuppeteer();
 
   return (
     <main className="container my-12 flex flex-col justify-center">
       <CSVUploader onDataUploaded={handleDataUploaded} />
       <CSVDataDisplay data={csvData} />
-
+      {companyNames.length > 0 && (
+        <div className="mt-8">
+          <button
+            onClick={scrapeCompanies}
+            disabled={isLoading}
+            className="mt-4 py-2 px-4 bg-blue-600 text-white rounded-md disabled:bg-blue-300"
+          >
+            {isLoading ? 'Scraping...' : 'Scrape Companies'}
+          </button>
+        </div>
+      )}
       {error && <p className="text-red-500 mt-4">{error}</p>}
       {scrapingResults.length > 0 && (
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Scraping Results</h2>
-          {scrapingResults.map((result: SearchResults, index: number) => (
-            <div key={index} className="mb-4">
-              <h3 className="text-xl font-semibold">{companyNames[index]}</h3>
-              <ul className="list-disc pl-5">
-                {result.results.slice(0, 3).map((item, idx) => (
-                  <li key={idx}>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {item.title}
-                    </a>
-                    <p>{item.description}</p>
-                  </li>
-                ))}
-              </ul>
+          {scrapingResults.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-4">Google Search Results</h2>
+              {scrapingResults.map((result, index) => (
+                <GoogleSearchResult
+                  key={index}
+                  company={result.company}
+                  results={result.results} // Pass the first result
+                />
+              ))}
             </div>
-          ))}
+          )}
         </div>
       )}
     </main>
