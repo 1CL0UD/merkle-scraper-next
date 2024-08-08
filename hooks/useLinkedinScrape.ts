@@ -21,29 +21,24 @@ interface ScrapingResult {
   results: GoogleSearchResult[];
 }
 
-interface PuppeteerHookResult {
+interface LinkedinScrapeHookResult {
   scrapingResults: ScrapingResult[];
   isLoading: boolean;
   error: string | null;
-  scrapeCompanies: () => Promise<void>;
-  csvData: CSVData | undefined;
-  companyNames: string[];
-  handleDataUploaded: (data: CSVData) => void;
+  scrapeLinkedin: (companyNames: string[]) => Promise<void>;
 }
 
-export function usePuppeteer(): PuppeteerHookResult {
+export function useLinkedinScrape(): LinkedinScrapeHookResult {
   const [scrapingResults, setScrapingResults] = useState<ScrapingResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { csvData, companyNames, handleDataUploaded } = useCSVUpload();
-
-  const scrapeCompanies = async () => {
+  const scrapeLinkedin = async (companyNames: string[]) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('/api/google-scrape', {
+      const response = await fetch('/api/linkedin-scrape', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,9 +65,6 @@ export function usePuppeteer(): PuppeteerHookResult {
     scrapingResults,
     isLoading,
     error,
-    scrapeCompanies,
-    csvData,
-    companyNames,
-    handleDataUploaded,
+    scrapeLinkedin,
   };
 }

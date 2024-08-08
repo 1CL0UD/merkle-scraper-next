@@ -17,7 +17,10 @@ export default function Home() {
 
   return (
     <main className="container my-12 flex flex-col justify-center">
-      <CSVUploader onDataUploaded={handleDataUploaded} />
+      <CSVUploader
+        onDataUploaded={handleDataUploaded}
+        subtitle="Search Companies Official Website"
+      />
       <CSVDataDisplay data={csvData} />
       {companyNames.length > 0 && (
         <div className="mt-8">

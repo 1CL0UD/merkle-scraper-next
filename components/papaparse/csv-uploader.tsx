@@ -11,21 +11,20 @@ const styles = {
 
 interface CSVUploaderProps {
   onDataUploaded: (data: any) => void;
+  subtitle?: string;
 }
 
-const CSVUploader = ({ onDataUploaded }: CSVUploaderProps) => {
+const CSVUploader = ({ onDataUploaded, subtitle }: CSVUploaderProps) => {
   const { CSVReader } = useCSVReader();
 
   return (
     <div className="container flex flex-col space-y-12">
-      <div className="flex justify-center bg-blue-400 text-white rounded-lg p-12">
-        <h1 className="text-7xl">Upload your CSV file here.</h1>
+      <div className="flex flex-col items-center bg-blue-400 text-white rounded-lg p-12 space-y-8">
+        <h2 className="text-3xl">{subtitle}</h2>
+        <h1 className="text-6xl">Upload your CSV file here.</h1>
       </div>
       <CSVReader
         onUploadAccepted={(results: any) => {
-          console.log('---------------------------');
-          console.log(results);
-          console.log('---------------------------');
           onDataUploaded(results);
         }}
       >
