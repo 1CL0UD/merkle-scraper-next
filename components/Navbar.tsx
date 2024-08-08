@@ -21,7 +21,7 @@ const Navbar = () => {
                 href={`/${item.value}`}
                 onClick={() => setActivePage(item.value)}
                 className={`py-2 px-4 rounded-lg hover:font-bold transition-all ${
-                  activePage === item.value && 'bg-gray-700'
+                  activePage === item.value && 'font-bold'
                 }`}
               >
                 {item.label}

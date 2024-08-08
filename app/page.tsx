@@ -2,15 +2,9 @@
 import GoogleSearchResult from '@/components/GoogleSearchResult';
 import CSVDataDisplay from '@/components/papaparse/csv-data-display';
 import CSVUploader from '@/components/papaparse/csv-uploader';
-import { useDDGS } from '@/hooks/useDDGS';
 import { usePuppeteer } from '@/hooks/usePuppeteer';
-import { SearchResults } from 'duck-duck-scrape';
-import { useState } from 'react';
 
 export default function Home() {
-  // const [csvData, setCSVData] = useState<CSVData | undefined>(undefined);
-  // const [companyNames, setCompanyNames] = useState<string[]>([]);
-
   const {
     csvData,
     companyNames,

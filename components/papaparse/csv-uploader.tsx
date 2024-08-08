@@ -17,8 +17,8 @@ const CSVUploader = ({ onDataUploaded }: CSVUploaderProps) => {
   const { CSVReader } = useCSVReader();
 
   return (
-    <div className="flex flex-col space-y-12">
-      <div className="container flex justify-center bg-blue-400 text-white rounded-lg p-12">
+    <div className="container flex flex-col space-y-12">
+      <div className="flex justify-center bg-blue-400 text-white rounded-lg p-12">
         <h1 className="text-7xl">Upload your CSV file here.</h1>
       </div>
       <CSVReader
