@@ -1,7 +1,6 @@
 // hooks/useDDGS.ts
 
 import { useState } from 'react';
-import { useCSVUpload } from './useCSVUpload';
 
 interface CSVData {
   data: string[][];
@@ -10,26 +9,42 @@ interface CSVData {
   };
 }
 
-interface GoogleSearchResult {
+export interface GoogleSearchResult {
   title: string;
   url: string;
   snippet: string;
 }
 
-interface ScrapingResult {
+export interface ScrapingResult {
   company: string;
   results: GoogleSearchResult[];
 }
 
+export interface Employee {
+  name: string;
+  position: string;
+}
+
+export interface CompanyEmployees {
+  company: string;
+  employees: Employee[];
+}
+
 interface LinkedinScrapeHookResult {
   scrapingResults: ScrapingResult[];
+  employeeResults: CompanyEmployees[];
   isLoading: boolean;
   error: string | null;
   scrapeLinkedin: (companyNames: string[]) => Promise<void>;
+  scrapeEmployees: (urls: string[]) => Promise<void>;
 }
 
 export function useLinkedinScrape(): LinkedinScrapeHookResult {
   const [scrapingResults, setScrapingResults] = useState<ScrapingResult[]>([]);
+  const [employeeResults, setEmployeeResults] = useState<CompanyEmployees[]>(
+    []
+  );
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,10 +76,40 @@ export function useLinkedinScrape(): LinkedinScrapeHookResult {
     }
   };
 
+  const scrapeEmployees = async (urls: string[]) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/employee-scrape', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ urls }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch employee data');
+      }
+
+      const results: CompanyEmployees[] = await response.json();
+      console.log(results);
+      setEmployeeResults(results);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'An unknown error occurred'
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return {
     scrapingResults,
+    employeeResults,
     isLoading,
     error,
     scrapeLinkedin,
+    scrapeEmployees,
   };
 }
