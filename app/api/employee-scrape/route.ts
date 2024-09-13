@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
     await page.goto(companyUrl, { waitUntil: 'networkidle0' });
